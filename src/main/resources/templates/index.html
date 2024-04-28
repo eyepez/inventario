@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario Tailoy 2023</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        /* Estilos para centrar y dar estilo moderno */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        p {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<h1>Inventario Tailoy 2023</h1>
+
+<form th:action="@{/save}" method="post" onsubmit="return submitForm()">
+    <input type="text" id="dataInput" name="dataInput" placeholder="Ingrese codigo de barra"/>
+    <button type="submit" style="display:none;">Submit</button>
+</form>
+
+<!-- Mostrar la cantidad de objetos ingresados debajo de la caja de texto -->
+<p>Total items ingresados: <span th:text="${totalObjects}">0</span></p>
+
+<form th:action="@{/export}" method="get">
+    <button type="submit">Exportar a Excel</button>
+</form>
+
+<script>
+    function submitForm() {
+        var inputData = document.getElementById('dataInput').value;
+        // Aquí puedes realizar una solicitud AJAX al controlador para guardar los datos.
+        // Por ejemplo, utilizando jQuery:
+        $.ajax({
+            type: "POST",
+            url: "/save",
+            data: {dataInput: inputData},
+            success: function (data) {
+                // Manejar la respuesta del servidor si es necesario.
+                console.log("Data saved successfully!");
+                // Redireccionar a la página de inicio después de guardar los datos.
+                window.location.href = "/";
+            },
+            error: function (error) {
+                // Manejar el error si la solicitud falla.
+                console.error("Error saving data:", error);
+            }
+        });
+
+        // Retorna "false" para evitar que el formulario haga la solicitud POST directamente.
+        return false;
+    }
+
+    // Enfocar automáticamente la caja de texto al cargar la página.
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('dataInput').focus();
+    });
+</script>
+</body>
+</html>
